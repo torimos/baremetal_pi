@@ -1,0 +1,1 @@
+multipass exec ubuntu -- make -C work/baremetal_pi %1
