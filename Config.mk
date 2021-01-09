@@ -55,6 +55,6 @@ endif
 CFLAGS += -Wall -fsigned-char -nostartfiles -ffreestanding -g $(ARCH) -I$(INC_DIR)
 CCFLAGS += $(CFLAGS) -std=c++14 -Wno-aligned-new
 
-OBJECTS = $(patsubst $(SRC_DIR)/%, %.o, $(shell find $(SRC_DIR)/ -type f -name '*.*'))
-DIRS = $(filter-out ./,$(sort $(dir $(OBJECTS))))
+OBJS = $(patsubst $(SRC_DIR)/%, %.o, $(shell find $(SRC_DIR)/ -type f -name '*.*'))
+DIRS = $(filter-out ./,$(sort $(dir $(OBJS))))
 
