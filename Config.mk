@@ -16,7 +16,7 @@ ifeq ($(strip $(AARCH)),32)
 	ifeq ($(strip $(MODEL)),1)
 		ARCH = -mcpu=arm1176jzf-s -marm -mfpu=vfp -mfloat-abi=$(FLOAT_ABI) -DRPI1 -Ofast
 		TARGET = kernel
-		LINKERFILE = rpi32.ld
+		LINKERFILE = $(LINKER_DIR)/rpi32.ld
 	else
 		$(error MODEL must be set to 0, 1, 2, 3 or 4)
 	endif
@@ -52,9 +52,14 @@ ifeq ($(strip $(GC_SECTIONS)),1)
 	LDFLAGS	+= --gc-sections
 endif
 
-CFLAGS += -Wall -fsigned-char -nostartfiles -ffreestanding -g $(ARCH) -I$(INC_DIR)
-CCFLAGS += $(CFLAGS) -std=c++14 -Wno-aligned-new
-
 OBJS = $(patsubst $(SRC_DIR)/%, %.o, $(shell find $(SRC_DIR)/ -type f -name '*.*'))
 DIRS = $(filter-out ./,$(sort $(dir $(OBJS))))
 
+CFLAGS += -Wall -fsigned-char -nostartfiles -ffreestanding -g $(ARCH) -I$(INC_DIR)
+CCFLAGS += $(CFLAGS) -std=c++14 -Wno-aligned-new
+
+LDFLAGS = -T $(LINKERFILE) \
+			--start-group \
+			$(LIBS) \
+			$(EXTRALIBS) \
+			--end-group

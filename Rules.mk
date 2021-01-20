@@ -9,9 +9,7 @@ include $(HOME)/Config.mk
 
 $(TARGET).img: $(OBJS)
 	@echo "  LD $(TARGET).elf"
-	@$(LD) $(LDFLAGS) -o $(BUILD_DIR)/$(TARGET).elf -Map $(BUILD_DIR)/$(TARGET).map \
-		-T $(LINKER_DIR)/$(LINKERFILE) $(patsubst %.o,$(OBJ_DIR)/%.o,$(OBJS)) \
-		--start-group $(LIBS) $(EXTRALIBS) --end-group
+	@$(LD) -o $(BUILD_DIR)/$(TARGET).elf -Map $(BUILD_DIR)/$(TARGET).map $(patsubst %.o,$(OBJ_DIR)/%.o,$(OBJS)) $(LDFLAGS) 
 	@echo "  COPY  $(TARGET).img"
 	@$(CPY) $(BUILD_DIR)/$(TARGET).elf -O binary $(BUILD_DIR)/$(TARGET).img
 	@echo "  DUMP  $(TARGET).disasm"
