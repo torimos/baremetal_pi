@@ -14,7 +14,7 @@ OBJ_DIR = $(BUILD_DIR)/obj
 ifeq ($(strip $(AARCH)),32)
 	PREFIX	 ?= arm-none-eabi-
 	ifeq ($(strip $(MODEL)),1)
-		ARCH = -mcpu=arm1176jzf-s -marm -mfpu=vfp -mfloat-abi=$(FLOAT_ABI) -DRPI1 -Ofast
+		ARCH = -Ofast -mcpu=arm1176jzf-s -marm -mfpu=vfp -mfloat-abi=$(FLOAT_ABI) -DRPI1
 		TARGET = kernel
 		LINKERFILE = $(LINKER_DIR)/rpi32.ld
 	else
@@ -35,6 +35,15 @@ DMP	 = $(PREFIX)objdump
 NM	 = $(PREFIX)nm
 HDMP = hexdump
 
+CFLAGS += -g -Wall -fsigned-char -nostdlib -nostartfiles -ffreestanding $(ARCH)
+CCFLAGS += $(CFLAGS) -std=c++14 -Wno-aligned-new
+
+LDFLAGS = -Bstatic -T $(LINKERFILE) \
+			--start-group \
+			$(LIBS) \
+			$(EXTRALIBS) \
+			--end-group
+
 ifeq ($(strip $(STDLIB_SUPPORT)),0)
 	LIBGCC	  = "$(shell $(CXX) $(ARCH) -print-file-name=libgcc.a)"
 	LIBC	  = "$(shell $(CXX) $(ARCH) -print-file-name=libc.a)"
@@ -54,12 +63,3 @@ endif
 
 OBJS = $(patsubst $(SRC_DIR)/%, %.o, $(shell find $(SRC_DIR)/ -type f -name '*.*'))
 DIRS = $(filter-out ./,$(sort $(dir $(OBJS))))
-
-CFLAGS += -Wall -fsigned-char -nostartfiles -ffreestanding -g $(ARCH) -I$(INC_DIR)
-CCFLAGS += $(CFLAGS) -std=c++14 -Wno-aligned-new
-
-LDFLAGS = -T $(LINKERFILE) \
-			--start-group \
-			$(LIBS) \
-			$(EXTRALIBS) \
-			--end-group

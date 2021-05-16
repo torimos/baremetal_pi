@@ -1,11 +1,11 @@
 include $(HOME)/Config.mk
 
 %.S.o: %.S
-	@$(CC) $(CFLAGS) -c $< -o $(OBJ_DIR)/$@
+	@$(CC) $(CFLAGS) -I$(INC_DIR) -c $< -o $(OBJ_DIR)/$@
 %.c.o: %.c
-	@$(CC) $(CFLAGS) -c $< -o $(OBJ_DIR)/$@
+	@$(CC) $(CFLAGS) -I$(INC_DIR) -c $< -o $(OBJ_DIR)/$@
 %.cpp.o: %.cpp
-	@$(CXX) $(CCFLAGS) -c $< -o $(OBJ_DIR)/$@
+	@$(CXX) $(CCFLAGS) -I$(INC_DIR) -c $< -o $(OBJ_DIR)/$@
 
 $(TARGET).img: $(OBJS)
 	@echo "  LD $(TARGET).elf"
